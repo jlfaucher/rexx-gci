@@ -1,0 +1,4 @@
+1.0 --> 1.1 (28.12.2004, dd.mm.yyyy)
+        * Changed Win32 init code; thanks to Christian Kulovits.
+        * Added function GciPrefixChar.
+        * LIKE keyword.

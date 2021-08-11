@@ -1,0 +1,86 @@
+#
+# These	example	lines do the job for the builtin REXX interpreter on OS/2.
+#
+REXX_INCLUDE_PATH=.
+REXX_LIBRARY_PATH=.
+REXX_LIBRARY=
+HEADERDEF=/dUSE_REXXSAA_H /dRexxAllocateMemory=malloc /dRexxFreeMemory=free &
+	  /dRXFUNC_OK=0	/dRXFUNC_NOMEM=20 /dRXFUNC_DEFINED=10 &
+	  /dRXFUNC_MODNOTFND=40	/dRXFUNC_ENTNOTFND=50 /dRXFUNC_NOTREG=30 &
+	  /dRXFUNC_BADTYPE=70 /dCONST=const
+
+#
+# There	is no need to change anything below for	known systems
+###############################################################################
+#
+OBJ=obj
+
+.obj: $(OBJ)
+.c.obj:
+     wcl386 -wx	-I$(REXX_INCLUDE_PATH) $(HEADERDEF) -d2	-bd -4s	-zq -DDEBUG &
+	    -c -fo=$^@ $[@
+
+OBJS=$(OBJ)\gci_convert.obj $(OBJ)\gci_prepare.obj $(OBJ)\gci_tree.obj &
+     $(OBJ)\gci_helper.obj $(OBJ)\gci_rexxbridge.obj &
+     $(OBJ)\gci_rxfuncdefine.obj $(OBJ)\gci_call.obj $(OBJ)\gci_execute.obj &
+     $(OBJ)\gci_oslink.obj
+
+gci.dll: $(OBJS)
+	@%create dummy.lnk
+	@%append dummy.lnk option quiet
+	@%append dummy.lnk option caseexact
+	@%append dummy.lnk system os2v2	dll
+	@%append dummy.lnk name	$^@
+	@%append dummy.lnk file	$(OBJ)\gci_convert.obj
+	@%append dummy.lnk file	$(OBJ)\gci_prepare.obj
+	@%append dummy.lnk file	$(OBJ)\gci_tree.obj
+	@%append dummy.lnk file	$(OBJ)\gci_helper.obj
+	@%append dummy.lnk file	$(OBJ)\gci_rexxbridge.obj
+	@%append dummy.lnk file	$(OBJ)\gci_rxfuncdefine.obj
+	@%append dummy.lnk file	$(OBJ)\gci_call.obj
+	@%append dummy.lnk file	$(OBJ)\gci_execute.obj
+	@%append dummy.lnk file	$(OBJ)\gci_oslink.obj
+!ifneq REXX_LIBRARY
+	@%append dummy.lnk file	$(REXX_LIBRARY_PATH)\$(REXX_LIBRARY)
+!endif
+	@%append dummy.lnk export RxFuncDefine
+	@%append dummy.lnk export GciFuncDrop
+	@%append dummy.lnk export GciPrefixChar
+	@%append dummy.lnk export _GciDispatcher
+	wlink DEBUG WATCOM ALL @dummy.lnk
+	@-del dummy.lnk
+
+$(OBJS): gci.h embedded.h
+
+$(OBJ)\gci_convert.obj:	     gci_convert.c	gci_convert.h
+
+$(OBJ)\gci_prepare.obj:	     gci_prepare.c
+
+$(OBJ)\gci_tree.obj:	     gci_tree.c
+
+$(OBJ)\gci_helper.obj:	     gci_helper.c
+
+$(OBJ)\gci_rexxbridge.obj:   gci_rexxbridge.c
+
+$(OBJ)\gci_rxfuncdefine.obj: gci_rxfuncdefine.c
+
+$(OBJ)\gci_call.obj:	     gci_call.c		gci_convert.h
+
+$(OBJ)\gci_execute.obj:	     gci_execute.c
+
+$(OBJ)\gci_oslink.obj:	     gci_oslink.c
+
+gci_convert.h: gci_convert.os2.wcc
+	copy gci_convert.os2.wcc gci_convert.h
+
+gci_oslink.c: gci_oslink.os2
+	copy gci_oslink.os2 gci_oslink.c
+
+clean: .SYMBOLIC
+	-del *.bak err *.err dummy.lnk rexx.h /N /F >nul 2>&1
+
+cleaner: clean .SYMBOLIC
+	-del $(OBJ)\*.obj *.dll	*.lib /N /F >nul 2>&1
+
+distclean: cleaner .SYMBOLIC
+	-del .gdbinit* try* gci_convert.h /N /F	>nul 2>&1

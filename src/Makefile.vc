@@ -1,0 +1,44 @@
+#
+# These	example	lines do the job for ORexx/Regina/Reginald on Win32 platforms.
+#
+REXX_INCLUDE_PATH=..
+
+#
+# There	is no need to change anything below for	known systems
+###############################################################################
+#
+OBJ=obj
+
+.c{$(OBJ)}.obj:
+	cl -nologo -W4 -I$(REXX_INCLUDE_PATH) -Zi -LD -DDEBUG -c -Fo$@ $<
+
+OBJS=$(OBJ)\gci_convert.obj $(OBJ)\gci_prepare.obj $(OBJ)\gci_tree.obj \
+     $(OBJ)\gci_helper.obj $(OBJ)\gci_rexxbridge.obj \
+     $(OBJ)\gci_rxfuncdefine.obj $(OBJ)\gci_call.obj $(OBJ)\gci_execute.obj \
+     $(OBJ)\gci_oslink.obj $(OBJ)\win32init.obj
+
+gci.dll: $(OBJS)
+	cl -nologo -W4 -Zi -LD	-Fe$@ $** gci_win32.def	/link
+
+$(OBJS): gci.h embedded.h
+
+$(OBJ)\gci_convert.obj:	gci_convert.c gci_convert.h
+
+$(OBJ)\gci_call.obj: gci_call.c	gci_convert.h
+
+gci_convert.h: gci_convert.win32.vc
+	copy gci_convert.win32.vc gci_convert.h
+
+gci_oslink.c: gci_oslink.w32
+	copy gci_oslink.w32 gci_oslink.c
+
+.PHONY:	clean cleaner distclean
+
+clean:
+	-del /f/q *.bak	err >nul 2>&1
+
+cleaner: clean
+	-del /f/q $(OBJ)\*.obj *.dll *.pdb *.ilk *.lib *.exp >nul 2>&1
+
+distclean: cleaner
+	-del /f/q .gdbinit* try* gci_convert.h >nul 2>&1

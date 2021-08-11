@@ -1,0 +1,5 @@
+2021 aug 11
+Create Github repository.
+Clone of http://rexx-gci.sourceforge.net/
+gci-source.1.1.zip
+Author: Florian Grosse-Coosmann

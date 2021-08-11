@@ -1,0 +1,71 @@
+# These	example	lines do the job for EMX/OS2/Regina.
+#
+REXX_INCLUDE_PATH=.
+REXX_LIBRARY_PATH=.
+HEADERDEF=-DUSE_REXX_H -DRexxAllocateMemory=malloc -DRexxFreeMemory=free \
+	  -DCONST=const
+REXX_LIBRARY=
+
+#
+# There	is no need to change anything below for	known systems
+###############################################################################
+#
+OBJ=obj
+
+ifdef REXX_LIBRARY
+ ifneq "$(REXX_LIBRARY)" ""
+  REXX_LINK=$(REXX_LIBRARY_PATH)\$(REXX_LIBRARY)
+ endif
+endif
+
+$(OBJ)/%.obj: %.c
+	gcc -Wall -I$(REXX_INCLUDE_PATH) -g -Zmt -DDEBUG -Wno-char-subscripts \
+	    -Zdll -Zcrtdll -Zomf $(HEADERDEF) \
+	    -c -o $@ $<
+
+OBJS=$(OBJ)/gci_convert.obj $(OBJ)/gci_prepare.obj $(OBJ)/gci_tree.obj \
+     $(OBJ)/gci_helper.obj $(OBJ)/gci_rexxbridge.obj \
+     $(OBJ)/gci_rxfuncdefine.obj $(OBJ)/gci_call.obj $(OBJ)/gci_execute.obj \
+     $(OBJ)/gci_oslink.obj
+
+gci.dll: $(OBJS)
+	@echo LIBRARY gci INITINSTANCE				       >hlp.def
+	@echo DESCRIPTION 'Generic Call	Interface for REXX using EMX' >>hlp.def
+	@echo DATA MULTIPLE NONSHARED				      >>hlp.def
+	@echo STACKSIZE	40960					      >>hlp.def
+	@echo HEAPSIZE	40960					      >>hlp.def
+	@echo EXPORTS						      >>hlp.def
+	@echo RxFuncDefine					      >>hlp.def
+	@echo GciFuncDrop					      >>hlp.def
+	@echo GciPrefixChar					      >>hlp.def
+	@echo _GciDispatcher					      >>hlp.def
+	gcc -Zdll -Zomf	-Zcrtdll \
+	    -o $@ $^ $(REXX_LINK) hlp.def
+	@-del hlp.def /N/F
+
+$(OBJS): gci.h embedded.h rexx.h
+
+rexx.h:
+	@echo #define INCL_REXXSAA    >rexx.h
+	@echo #include ^<os2emx.h^>  >>rexx.h
+
+$(OBJ)/gci_convert.obj:	gci_convert.c gci_convert.h
+
+$(OBJ)/gci_call.obj: gci_call.c	gci_convert.h
+
+gci_convert.h: gci_convert.os2.emx
+	copy gci_convert.os2.emx gci_convert.h
+
+gci_oslink.c: gci_oslink.os2
+	copy gci_oslink.os2 gci_oslink.c
+
+.PHONY:	clean cleaner distclean
+
+clean:
+	-del *.bak hlp.def err rexx.h /N /F >nul 2>&1
+
+cleaner: clean
+	-del $(OBJ)/*.obj *.dll	/N /F >nul 2>&1
+
+distclean: cleaner
+	-del .gdbinit* try* gci_convert.h /N /F	>nul 2>&1

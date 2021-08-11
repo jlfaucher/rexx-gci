@@ -1,0 +1,9 @@
+GCI_API {
+        global:
+                RxFuncDefine;
+                GciFuncDrop;
+                GciPrefixChar;
+                _GciDispatcher;
+        local:
+                *;
+};
