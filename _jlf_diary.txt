@@ -1,4 +1,52 @@
-2021 aug 11
+2021 August 13
+
+Added new makefiles to build with Builder
+    Macos, Linux:
+        cd src
+        make -f GNUmakefile-builder configure   # (to clean the build and to create the rights symbolic links)
+        make -f GNUmakefile-builder
+    Windows:
+        cd src
+        nmake /f Makefile-builder.vc configure  & rem (to clean the build and to create the rights symbolic links)
+        nmake /f Makefile-builder.vc
+
+The binaries are generated in the folder build, the dynamic libraries are in github for these configurations:
+    build/macos/clang/debug/64
+    build/macos/clang/release/64
+    build/ubuntu/gcc/debug/64
+    build/ubuntu/gcc/release/64
+    build/win/cl/debug/64
+    build/win/cl/release/64
+
+
+Added support for 64-bit.
+
+Added support for type aliases.
+Each alias defines a type and a size, no size accepted after these aliases.
+
+- long (signed long)
+- llong (signed long long)
+- pointer (opaque, no dereferencement, unlike GCI_indirect)
+- size_t (unsigned)
+- ssize_t (signed)
+- ulong (unsigned long)
+- ullong (unsigned long long)
+
+The file gci-try.rexx has been updated to support MacOs.
+
+The demo with statvfs in gci-try.rexx has been documented to bring all the
+details about the types used in the structure.
+This function is a good illustration of the need of type aliases in GCI.
+
+The structure statvfs64 depends on the bitness.
+Since the rexx interpreters do not provide a portable way to test their bitness, a new function has been added to GCI:
+    GciBitness
+which returns 32 or 64.
+
+
+================================================================================
+2021 August 11
+
 Create Github repository.
 Clone of http://rexx-gci.sourceforge.net/
 gci-source.1.1.zip

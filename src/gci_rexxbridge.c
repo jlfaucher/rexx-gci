@@ -1,6 +1,6 @@
 /*
  *  Generic Call Interface for Rexx
- *  Copyright © 2003-2004, Florian Große-Coosmann
+ *  Copyright Â© 2003-2004, Florian Groï¬‚e-Coosmann
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Library General Public
@@ -1181,4 +1181,15 @@ APIRET APIENTRY _GciDispatcher( PCSZ calledname,
       return retval || syntaxError( rc );
 
    return 1;
+}
+
+
+APIRET APIENTRY GciBitness(PCSZ *name, ULONG argc, CONST PRXSTRING argv, PCSZ queuename, PRXSTRING returnstring)
+{
+  if (argc != 0) return 1;
+                                       /* format into the buffer            */
+  sprintf(returnstring->strptr, "%d", GCI_BITNESS);
+  returnstring->strlength = strlen(returnstring->strptr);
+
+  return 0;
 }

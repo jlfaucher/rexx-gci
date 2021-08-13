@@ -86,7 +86,12 @@
  * GCI_STACK_ELEMENT sets integral type of a stack element. This is typically
  * an unsigned or int.
  */
-#define GCI_STACK_ELEMENT unsigned
+#if defined(_M_IX86)
+#define GCI_STACK_ELEMENT unsigned __int32
+#else
+#define GCI_STACK_ELEMENT unsigned __int64
+#endif
+
 
 /*
  * GCI_LITTLE_ENDIAN must be set to 1 or 0 depending on whether little endian

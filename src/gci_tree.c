@@ -1,6 +1,6 @@
 /*
  *  Generic Call Interface for Rexx
- *  Copyright © 2003-2004, Florian Große-Coosmann
+ *  Copyright Â© 2003-2004, Florian Groï¬‚e-Coosmann
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Library General Public
@@ -76,8 +76,15 @@ static GCI_basetype checkname( const char **str,
       { GCI_float,     5, "FLOAT"     },
       { GCI_indirect,  8, "INDIRECT"  },
       { GCI_like,      4, "LIKE"      },
+      { GCI_long,      4, "LONG"      }, // JLF long
+      { GCI_llong,     5, "LLONG"     }, // JLF long long
       { GCI_integer,   7, "INTEGER"   },
+      { GCI_pointer,   7, "POINTER"   }, // JLF void*
+      { GCI_size_t,    6, "SIZE_T"    }, // JLF size_t (unsigned)
+      { GCI_ssize_t,   7, "SSIZE_T"   }, // JLF ssize_t (signed)
       { GCI_string,    6, "STRING"    },
+      { GCI_ulong,     5, "ULONG"     }, // JLF unsigned long
+      { GCI_ullong,    6, "ULLONG"    }, // JLF unsigned long long
       { GCI_unsigned,  8, "UNSIGNED"  }
    };
    const char *s = *str;
@@ -247,6 +254,58 @@ static GCI_result decode( void *hidden,
       case GCI_string:
          if ( size == 0 ) /* length must be supplied */
             return GCI_UnsupportedType;
+         break;
+
+      // JLF needed for portability: aliases which depend on the system & bitness.
+      // Each alias defines a type and a size, no size accepted after these aliases.
+
+      case GCI_long:
+         if ( size > 0 )
+            return GCI_UnsupportedType;
+         pi->type = GCI_integer;
+         pi->size = 8 * sizeof( long );
+         break;
+
+      case GCI_llong:
+         if ( size > 0 )
+            return GCI_UnsupportedType;
+         pi->type = GCI_integer;
+         pi->size = 8 * sizeof( long long );
+         break;
+
+      case GCI_pointer: // opaque
+         if ( size > 0 )
+            return GCI_UnsupportedType;
+         pi->type = GCI_unsigned;
+         pi->size = 8 * sizeof( void* );
+         break;
+
+      case GCI_size_t:
+         if ( size > 0 )
+            return GCI_UnsupportedType;
+         pi->type = GCI_unsigned;
+         pi->size = 8 * sizeof( size_t );
+         break;
+
+      case GCI_ssize_t:
+         if ( size > 0 )
+            return GCI_UnsupportedType;
+         pi->type = GCI_integer;
+         pi->size = 8 * sizeof( ssize_t );
+         break;
+
+      case GCI_ulong:
+         if ( size > 0 )
+            return GCI_UnsupportedType;
+         pi->type = GCI_unsigned;
+         pi->size = 8 * sizeof( unsigned  long );
+         break;
+
+      case GCI_ullong:
+         if ( size > 0 )
+            return GCI_UnsupportedType;
+         pi->type = GCI_unsigned;
+         pi->size = 8 * sizeof( unsigned  long long );
          break;
 
       default:

@@ -1,6 +1,6 @@
 /*
  *  Generic Call Interface for Rexx
- *  Copyright © 2003-2004, Florian Große-Coosmann
+ *  Copyright Â© 2003-2004, Florian Groï¬‚e-Coosmann
  *
  *  This library is free software; you can redistribute it and/or
  *  modify it under the terms of the GNU Library General Public
@@ -78,7 +78,16 @@ typedef enum {
    GCI_char,
    GCI_string,
    GCI_container,
-   GCI_array
+   GCI_array,
+   // JLF needed for portability: aliases which depend on the system & bitness.
+   // Each alias defines a type and a size, no size accepted after these aliases.
+   GCI_long,
+   GCI_llong,
+   GCI_pointer, // opaque, no dereferencement, unlike GCI_indirect
+   GCI_size_t,
+   GCI_ssize_t,
+   GCI_ulong,
+   GCI_ullong
 } GCI_basetype;
 
 /*
