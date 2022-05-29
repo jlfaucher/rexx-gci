@@ -1,3 +1,8 @@
+Maybe useful ?
+https://www.reddit.com/r/asm/comments/sr3s6i/question_about_microsoft_x64_calling_convention/
+
+
+================================================================================
 2021 August 13
 
 Added new makefiles to build with Builder

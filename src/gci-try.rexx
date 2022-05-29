@@ -65,10 +65,10 @@ else do
    end
 
 say "system=" system
-if var("library") then say "library=" library
-if var("CLib") then say "CLib=" CLib
-if var("MathLib") then say "MathLib=" MathLib
-if var("DlLib") then say "DlLib=" DlLib
+if symbol("library") == "VAR" then say "library=" library
+if symbol("CLib") == "VAR" then say "CLib=" CLib
+if symbol("MathLib") == "VAR" then say "MathLib=" MathLib
+if symbol("DlLib") == "VAR" then say "DlLib=" DlLib
 
 /*
  * Check for a builtin RxFuncDefine. Call it with errorneous arguments and

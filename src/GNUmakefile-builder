@@ -64,6 +64,24 @@ OBJS=$(OBJ)/gci_convert.o $(OBJ)/gci_prepare.o $(OBJ)/gci_tree.o \
 
 all: $(OBJ) $(OBJ)/libgci$(DLEXT)
 
+# Remember:
+# -lrexxapi creates a dependency on ooRexx, the GCI library doesn't work with Regina :-(((
+# if -lrexxapi is removed then:
+# Undefined symbols for architecture x86_64:
+#   "_RexxDeregisterFunction", referenced from:
+#       _GciFuncDrop in gci_rexxbridge.o
+#   "_RexxFreeMemory", referenced from:
+#       _string2float in gci_convert.o
+#       _GCI_parsenodes in gci_prepare.o
+#       _walker in gci_prepare.o
+#       _GCI_strfree in gci_helper.o
+#       _GCI_RegisterDefinedFunction in gci_rexxbridge.o
+#       _GciFuncDrop in gci_rexxbridge.o
+#       _GCI_remove_structure in gci_rexxbridge.o
+#       ...
+#   "_RexxRegisterFunctionDll", referenced from:
+#       _GCI_RegisterDefinedFunction in gci_rexxbridge.o
+
 $(OBJ)/libgci$(DLEXT): $(OBJS)
 	gcc -Wall -I. -g -shared $(LDFLAGS)	\
 	    -L$(builder_delivery_dir)/bin -L$(builder_delivery_dir)/lib -lrexx -lrexxapi \
