@@ -12,7 +12,7 @@ REXX_INCLUDE_PATH=..
 # There	is no need to change anything below for	known systems
 ###############################################################################
 #
-OBJ=..\build\$(BUILDER_SYSTEM)\$(BUILDER_COMPILER)\$(BUILDER_CONFIG)\$(BUILDER_BITNESS)
+OBJ=..\build\$(BUILDER_SYSTEM)\$(BUILDER_COMPILER)\$(BUILDER_CONFIG)
 
 !IF "$(BUILDER_CONFIG)" == "debug"
 my_cdebug = -Zi /Od /D_DEBUG /Fd$(OBJ)\ /DEBUGTYPE:CV
@@ -49,9 +49,9 @@ $(OBJ)\gci_call.obj: gci_call.c	gci_convert.h
 .PHONY:	configure clean cleaner distclean
 
 configure: clean
-	-del /f/q gci_convert.h
+	if exist gci_convert.h del /f/q gci_convert.h
 	copy gci_convert.win32.vc gci_convert.h
-	-del /f/q gci_oslink.c
+	if exist gci_oslink.c del /f/q gci_oslink.c
 	copy gci_oslink.w32 gci_oslink.c
 
 clean: $(OBJ)

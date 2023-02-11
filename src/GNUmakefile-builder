@@ -15,9 +15,10 @@ MY_GCC_FLAGS=-Wall -Wno-self-assign -I$(REXX_INCLUDE_PATH) $(HEADERDEF) -fPIC -D
 # There	is no need to change anything below for	known systems
 ###############################################################################
 #
-OBJ=../build/$(builder_system)/$(builder_compiler)/$(builder_config)/$(builder_bitness)
+OBJ=../build/$(builder_system)/$(builder_compiler)/$(builder_config)
 DLEXT=.so
 
+# jlf todo: add Linux arm64 (no VM to test)
 ifeq	  "Linux"		      "$(shell uname -s)"
  ifeq	   "ix86"		      "$(patsubst i%86,ix86,$(shell uname -m))"
 		    CVT=linux.i86
@@ -45,11 +46,17 @@ else
 		    OSL=macX
 		    DLEXT=.dylib
   else
-   ifeq	   "SunOS"		     "$(shell uname -s)"
+   ifeq	"Darwin arm64"  "$(shell uname -sm)"
+		    CVT=macX.all
+		    OSL=macX
+		    DLEXT=.dylib
+   else
+    ifeq	"SunOS"		     "$(shell uname -s)"
 		    CVT=solaris.sparc
 		    OSL=unix
-   else
-    $(error			      Unsupported/unknown system)
+    else
+     $(error		      Unsupported/unknown system)
+    endif
    endif
   endif
  endif
@@ -81,6 +88,16 @@ all: $(OBJ) $(OBJ)/libgci$(DLEXT)
 #       ...
 #   "_RexxRegisterFunctionDll", referenced from:
 #       _GCI_RegisterDefinedFunction in gci_rexxbridge.o
+#
+# ooRexx: exported by librexxapi.dylib
+# RexxDeregisterFunction    is declared in rexxapi.def
+# RexxFreeMemory            is declared in rexxapi.def
+# RexxRegisterFunctionDll   is declared in rexxapi.def
+#
+# Regina: exported by libregina.dylib
+# RexxDeregisterFunction    is declared in rexxapi.def and other .def files
+# RexxFreeMemory            is declared in various .def files, but not in rexxapi.def
+# RexxRegisterFunctionDll   is declared in rexxapi.def and other .def files
 
 $(OBJ)/libgci$(DLEXT): $(OBJS)
 	gcc -Wall -I. -g -shared $(LDFLAGS)	\

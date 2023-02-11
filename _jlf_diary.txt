@@ -1,6 +1,28 @@
 Maybe useful ?
 https://www.reddit.com/r/asm/comments/sr3s6i/question_about_microsoft_x64_calling_convention/
+https://learn.microsoft.com/en-us/cpp/build/arm64-windows-abi-conventions?view=msvc-170
+https://developer.apple.com/documentation/apple-silicon/addressing-architectural-differences-in-your-macos-code
+https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms#//apple_ref/doc/uid/TP40009020-SW1
 
+
+================================================================================
+07/02/2023
+
+Modify the organization of the build folders to support several architectures:
+- x86_64
+- arm64
+
+
+Add the binaries for MacOs ARM64 and Windows ARM64.
+Did not modify anything for ARM64...
+Seems to work, but i'm sure there are corner cases that will not work (like
+float - was already not adapted when I added the support for 64-bit).
+
+Tested under MacOs Monterey ARM64: gci-try.rex is ok.
+Tested under Windows 11 ARM64: gci-try.rex is ok, and the colors are displayed
+correctly in ooRexxShell (using the console API).
+
+Still to fix: remove the dependency on ooRexx libraries.
 
 ================================================================================
 2021 August 13
