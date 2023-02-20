@@ -15,7 +15,7 @@ MY_GCC_FLAGS=-Wall -Wno-self-assign -I$(REXX_INCLUDE_PATH) $(HEADERDEF) -fPIC -D
 # There	is no need to change anything below for	known systems
 ###############################################################################
 #
-OBJ=../build/$(builder_system)/$(builder_compiler)/$(builder_config)
+OBJ=../build/$(builder_system_arch)/$(builder_compiler)/$(builder_config)
 DLEXT=.so
 
 # jlf todo: add Linux arm64 (no VM to test)

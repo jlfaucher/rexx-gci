@@ -12,7 +12,7 @@ REXX_INCLUDE_PATH=..
 # There	is no need to change anything below for	known systems
 ###############################################################################
 #
-OBJ=..\build\$(BUILDER_SYSTEM)\$(BUILDER_COMPILER)\$(BUILDER_CONFIG)
+OBJ=..\build\$(BUILDER_SYSTEM_ARCH)\$(BUILDER_COMPILER)\$(BUILDER_CONFIG)
 
 !IF "$(BUILDER_CONFIG)" == "debug"
 my_cdebug = -Zi /Od /D_DEBUG /Fd$(OBJ)\ /DEBUGTYPE:CV
