@@ -4,6 +4,23 @@ https://learn.microsoft.com/en-us/cpp/build/arm64-windows-abi-conventions?view=m
 https://developer.apple.com/documentation/apple-silicon/addressing-architectural-differences-in-your-macos-code
 https://developer.apple.com/documentation/xcode/writing-arm64-code-for-apple-platforms#//apple_ref/doc/uid/TP40009020-SW1
 
+Application Binary Interface for the Arm Architecture is also a good reference, https://github.com/ARM-software/abi-aa/
+Particularly AAPCS64, Procedure Call Standard for the Arm 64-bit Architecture (AArch64), https://github.com/ARM-software/abi-aa/blob/main/aapcs64/aapcs64.rst
+
+Plus the zoom-in on the Exception Handling portion of the ABI:
+https://docs.microsoft.com/en-us/cpp/build/arm64-exception-handling?view=msvc-170
+
+And the shameless plug to the Arm64EC ABI:
+https://docs.microsoft.com/en-us/windows/arm/arm64ec-abi
+
+Small note on register assignment table:
+– x8 is used for returning large types by value.
+– x15 is used for __chkstk.
+
+Final note: Latest builds of Windows available through the Windows Insiders
+programs already have Pointer Authentication enabled. So it is quite *likely*
+you’ll start seeing it since it will show up on every non-leaf function’s prolog and epilog.
+
 
 ================================================================================
 07/02/2023
